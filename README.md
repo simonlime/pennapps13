@@ -1,4 +1,2 @@
-yahooHack
+pennapps
 =========
-
-Yahoo! Hackathon
