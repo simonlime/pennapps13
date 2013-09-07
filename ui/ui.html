@@ -1,18 +1,25 @@
 <html>
 	<head>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<link type="text/css" rel="stylesheet" href="style.css" />
-<script src="visualize.js"></script>
 
-	<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/dsp.js"></script>
+		<link type="text/css" rel="stylesheet" href="style.css" />
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/dsp.js"></script>
 <script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pocket.js"></script>
 <script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pocket.api.js"></script>
-<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pocket.audio.js"></script>
+<script type="text/javascript" src="pocket.audio.js"></script>
 
 <script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pixastic.custom.js" type="text/javascript"></script>
 
 <script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pre3d/pre3d.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pre3d/pre3d_path_utils.js"></script>
 <script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pre3d/pre3d_shape_utils.js"></script>
+
+
+		<script src="bgaudio_viz.js"></script> 
+		 <script src="visualize.js"></script> 
 	</head>
 	<body>
 		<div id="queue">
@@ -20,43 +27,252 @@
 				Playlist
 			</div>
 			<ul id="q_list">
-				<li>Item 1</li>
-				<li>Item 2</li>
-				<li>Item 3</li>
-				<li>Item 4</li>
-				<li>Item 5</li>
-				
+				<li>
+					Item 1
+				</li>
+				<li>
+					Item 2
+				</li>
+				<li>
+					Item 3
+				</li>
+				<li>
+					Item 4
+				</li>
+				<li>
+					Item 5
+				</li>
+
 			</ul>
-			<div id="upload" class="myButton">Add Songs</div>
+			<div id="upload" class="myButton">
+				Add Songs
+			</div>
 		</div>
-		<div id="background">
-			
-		<canvas id="background_process"></canvas>
-		<canvas id="background_display"></canvas>
+
+		<div id = "vizcontrols">
+
+			<div id="sm2-controls" class="sm2-fallback">
+				Your browser does not support the new HTML5 Audio Data API, falling back to SoundManager2 (Flash) audio.
+				<br/>
+				<br/>
+				<button class="start">
+					Start
+				</button>
+				<button class="stop">
+					Stop
+				</button>
+				<br/>
+				<br/>
+			</div>
+			<div id="audio-container">
+				<audio controls="true" id="audio" src="bananaphone"></audio>
+				<br />
+				<!--<audio controls="true" id="audio" src="music/03-venetian_snares-oengyilkos_vasarnap-obc"></audio><br />-->
+				<!--<audio controls="true" id="audio" src="music/04_Wisp-Me.ogg"></audio><br />-->
+			</div>
+
+			Status: <div id="status"></div>
+
+			<br/>
+			<br/>
+			<div id="log"></div>
+			<div id="presetlist">
+				<ul>
+					<li>
+						<a href="#waveform.js">Waveform</a>
+					</li>
+
+				</ul>
+			</div>
+
 		</div>
+<!-- 		<div id="background">
+
+			<canvas id="processcanvas" style="display: none;"></canvas>
+			<canvas id="screencanvas" width="800" height="800" style="display: block;"></canvas>
+		</div> -->
 		<div id="screen">
-		<canvas id="processcanvas" style="display: none;"></canvas>
-	<canvas id="screencanvas" width="800" height="800" style="display: block;"></canvas></div>
-		
+		<canvas id="processcanvas"></canvas>
+	</div>
+
+<!-- 		<div id="screen">
+			<canvas id="processcanvas" style="display: none;"></canvas>
+			<canvas id="screencanvas" width="800" height="800" style="display: block;"></canvas>
+		</div> -->
 
 		<div id="play_pause"></div>
-		
+
 		<div id="logo">
 			<img />
 			Logo Placeholder
 		</div>
-		
+
 		<script type="text/javascript">
-  var ui;
-  
-  $(function() {
-  ui=new psound.ui();
-  
-  ui.drawPause();
-  setInterval(ui.draw, 50);
-  });
-  //$('.marker').hover({alert("hovering");});
+      // var ui;
+// 
+      // $(function() {
+//       	
+        // ui = new psound.ui();
+// 
+        // ui.drawPause();
+        // setInterval(ui.draw, 10);
+      // });
+      //$('.marker').hover({alert("hovering");});
+      
+      
+      
+      function init() {
+	var width = 400;
+	var height = 400;
+	var cssWidth = 512;
+	var cssHeight = 512;
+
+	var screenElement = $("#screen").get(0);
+	var audioElement = $("#audio").get(0);
+	var scriptElement = $("#vizcode").get(0);
+
+	Pocket.init(screenElement, audioElement, scriptElement, {w:width, h:height, watchHash : true});
+
+	$(document).keydown(function(e) {
+		if (e.keyCode == 178) {
+			if (typeof soundManager != "undefined")
+				soundManager.togglePause("pocketsound");
+			else
+				audioElement.pause();
+		}
+		if (e.keyCode == 179) {
+			if (typeof soundManager != "undefined")
+				soundManager.togglePause("pocketsound");
+			else
+				audioElement.play();
+		}
+	});
+
+	$("#sm2-controls button.start").click(function() {
+		soundManager.play("pocketsound");
+	});
+	$("#sm2-controls button.stop").click(function() {
+		soundManager.stop("pocketsound");
+	});
+
+	$("#code-controls button.show").click(function() {
+		$("#presetctr").show();
+		$("#code-controls button").show();
+		$(this).hide();
+	});
+	$("#code-controls button.hide").click(function() {
+		$("#presetctr").hide();
+		$("#code-controls button").hide();
+		$("#code-controls button.show").show();
+	});
+
+	$("#code-controls button.reload").click(function() {
+		Pocket.loadCode($("#vizcode").val());
+	});
+
+
+	$("#vizcode").keyup(function(e) {
+		if (e.keyCode == 119) {
+			Pocket.loadCode($(this).val());
+		}
+	});
+
+	$("#presetlist a").click(function(e) {
+		$("#presetlist a").removeClass("active");
+		$(this).addClass("active").blur();
+
+	});
+
+	var $links = $("#presetlist a");
+
+	var checkKeyNextPrevious = function(e) {
+		if (e.which == 37 || e.which == 39) { // left | right {
+			for (var i=0;i<$links.size();i++) {
+				var cur = $links[i];
+				if (document.location.hash == $(cur).attr("href")) {
+					var prev = i > 0 ? $links[i-1] : $links.last();
+					var next = i < $links.size()-1 ? $links[i+1] : $links[0];
+					document.location.hash = (e.which == 37 ? $(prev).attr("href") : $(next).attr("href"));
+					return;
+				}
+			}
+		}
+	}
+
+	var updateScreenSize = function() {
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		var m = Math.min(w,h);
+
+		$("#screencanvas, #processcanvas, #screen").width(m).height(m);
+		$("#screen")
+			.css("position", "absolute")
+			.css("left", (w - m) / 2)
+			.css("top", (h - m) / 2);
+	}
+
+	var enlarge = function() {
+		$("#screen").unbind("click", enlarge);
+		$(".page-elements").hide();
+		$("body, html").css("backgroundColor", "rgb(0,0,0)");
+
+		updateScreenSize();
+
+		$("#screen").click(reset);
+		$(document).bind("keyup", checkKeyNextPrevious);
+		$(window).bind("resize", updateScreenSize);
+	};
+
+	var reset = function() {
+		$(".page-elements").show();
+		$("body, html").css("backgroundColor", "");
+
+		$("#screencanvas, #processcanvas, #screen").width(cssWidth).height(cssHeight);
+		$("#screen").css("position", "static");
+		$("#screen").unbind("click", reset);
+		$("#screen").click(enlarge);
+		$(document).unbind("keyup", checkKeyNextPrevious);
+		$(window).unbind("resize", updateScreenSize);
+	}
+
+
+	$("#screen").click(enlarge);
+}
+
+$(document).ready(init);
+
+
+		</script>
+		
+		
+		<script>
+	(function() {
+
+var pointsL = [];
+
+return function() {
+    quality(0.1);
+
+    decay(0.5);
+
+    for (var i=0;i<128;i++)
+      pointsL[i] = [ 1/127*i, 0.5 + soundData.waveDataL[i*2] * 0.2 ];
+
+    var h = ((time * 10) % 360) >> 0;
+
+    drawPath(pointsL, false, null, "hsl(" + h + ",100%,15%)", 28);
+    drawPath(pointsL, false, null, "hsl(" + h + ",100%,25%)", 20);
+
+    quality(0.75, true);
+
+    drawPath(pointsL, false, null, "white", 2);
+
+    commit();
+
+};
+
+})();
 </script>
 	</body>
-	
+
 </html>

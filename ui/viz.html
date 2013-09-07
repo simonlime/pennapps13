@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+<meta name="description" content="Music visualizations with JavaScript and HTML5 audio.">
+
+<title>All this is done in HTML5 by the way.</title>
+
+
+
+<link type="text/css" rel="stylesheet" href="http://www.nihilogic.dk/labs/pocket_full_of_html5/page.css">
+<link type="text/css" rel="stylesheet" href="http://www.nihilogic.dk/labs/pocket_full_of_html5/pocket.css">
+
+<link type='application/rss+xml' rel='alternate' id="rss-link" href='http://feeds2.feedburner.com/nihilogic'  title='Nihilogic' /> 
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/dsp.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pocket.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pocket.api.js"></script>
+<script type="text/javascript" src="pocket.audio.js"></script>
+
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pixastic.custom.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pre3d/pre3d.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pre3d/pre3d_path_utils.js"></script>
+<script type="text/javascript" src="http://www.nihilogic.dk/labs/pocket_full_of_html5/pre3d/pre3d_shape_utils.js"></script>
+<script src = "bgaudio_viz.js">
+
+
+
+</script>
+
+</head>
+
+<body>
+
+
+<div id="main">
+
+<div id="ctr">
+	<div id="background"></div>
+
+	<div id="screen">
+		<canvas id="processcanvas"></canvas>
+	</div>
+
+		<div id="output" class="page-elements">
+		<h3>Pocket Full of HTML5</h3>
+		<em>Experiments with HTML5 &lt;canvas&gt; and &lt;audio&gt;</em><br/><br/>
+		This project uses the new HTML5 Audio Data API. At the moment, only <a href="http://www.mozilla.com/en-US/firefox/all-beta.html">Firefox 4 beta</a> supports this.<br/>
+		<br/>
+		Click the visualization area to toggle "fullscreen" mode.<br/><br/>
+
+		<div id="sm2-controls" class="sm2-fallback">
+			
+			<button id="playpause">Play Pause</button> 
+
+			<br/><br/>
+		</div>
+		<div id="audio-container">
+			<audio controls="true" id="audio" src="bananaphone"></audio><br />
+			<!--<audio controls="true" id="audio" src="music/03-venetian_snares-oengyilkos_vasarnap-obc"></audio><br />-->
+			<!--<audio controls="true" id="audio" src="music/04_Wisp-Me.ogg"></audio><br />-->
+		</div>
+
+		Status: <div id="status"></div>
+
+		<br/><br/>
+		<div id="log"></div>
+
+
+			</div>
+
+
+	</div>
+</div>
+
+
+</div>
+
+<script>
+	(function() {
+
+var pointsL = [];
+
+return function() {
+    quality(0.1);
+
+    decay(0.5);
+
+    for (var i=0;i<128;i++)
+      pointsL[i] = [ 1/127*i, 0.5 + soundData.waveDataL[i*2] * 0.2 ];
+
+    var h = ((time * 10) % 360) >> 0;
+
+    drawPath(pointsL, false, null, "hsl(" + h + ",100%,15%)", 28);
+    drawPath(pointsL, false, null, "hsl(" + h + ",100%,25%)", 20);
+
+    quality(0.75, true);
+
+    drawPath(pointsL, false, null, "white", 2);
+
+    commit();
+
+};
+
+})();
+</script>
+
+</body>
+</html>
+

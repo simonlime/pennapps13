@@ -6,7 +6,12 @@ src: url('Aller_Bd.ttf');
 body{
 	background-color:black;
 }
+#vizcontrols{
+	position: absolute;
+z-index: 2;
+margin-left: 500px;
 
+}
 #queue{
     width: 250px;
 	
