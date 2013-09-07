@@ -1,0 +1,25 @@
+head
+	meta(charset="utf-8")
+
+	//Set the viewport width to device width for mobile
+	meta(name="viewport", content="width=device-width")
+
+	title PennApps
+
+	//DNS Prefetch for performance improvements
+	link(rel="dns-prefetch", href="//cdnjs.cloudflare.com")
+
+	//STYLESHEETS
+	//NormalizeCSS for cross broswer compatibility improvements --does PureCSS have this -- INVESTIGATE
+	link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/normalize/2.1.0/normalize.css")
+	//Main website CSS file
+	link(rel="stylesheet", href="/css/index.css")
+	link(rel="stylesheet", href="/css/foundation/normalize.css")
+	link(rel="stylesheet", href="/css/foundation/foundation.min.css")
+
+	//JAVASCRIPT HEAD
+	//__Modernizr from CDN for graceful degredation and HTML5 Shiv
+	script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js")
+	//__Socket.io from CDN
+	script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.10/socket.io.min.js")
+	script(type='text/javascript', src="//api.filepicker.io/v1/filepicker.js")
