@@ -9,6 +9,7 @@
 		"mongoose"	: "*",
 		"connect" 	: "*",
 		"socket.io"	: "*",
-		"socket-ntp": "*"
+		"socket-ntp": "*",
+		"request" 	: "*"
 	}
 }
