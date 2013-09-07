@@ -30,7 +30,7 @@ var controlled = false;
 var jukeboxData = {
     infiniteMode:true,      // if true, allow branching
     maxBranches : 4,        // max branches allowed per beat
-    maxBranchThreshold :80, // max allowed distance threshold
+    maxBranchThreshold :2000, // max allowed distance threshold
 
     computedThreshold: 0,   // computed best threshold
     currentThreshold: 0,    // current in-use max threshold
@@ -266,7 +266,7 @@ function readyToPlay(t) {
     setDisplayMode(true);
     driver = Driver(player);
     info("ready!");
-    //normalizeColor();
+    normalizeColor();
     trackReady(t);
     drawVisualization();
     driver.start();
@@ -938,7 +938,7 @@ function extractNearestNeighbors(q, maxThreshold) {
 
 function seg_distance(seg1, seg2, field, weighted) {
     if (weighted) {
-        return euclidean_distance(seg1[field], seg2[field]);
+        return weighted_euclidean_distance(seg1[field], seg2[field]);
     } else {
         return euclidean_distance(seg1[field], seg2[field]);
     }
@@ -1104,9 +1104,9 @@ function createNewTile(which, q, height, width) {
     tile.which = which;
     tile.width = width;
     tile.height =  height;
-    // tile.branchColor = getBranchColor(q);
-    // tile.quantumColor = getQuantumColor(q);
-    // tile.normalColor = tile.quantumColor;
+    tile.branchColor = getBranchColor(q);
+    tile.quantumColor = getQuantumColor(q);
+    tile.normalColor = tile.quantumColor;
     tile.isPlaying = false;
     tile.isScaled = false;
 
@@ -1837,7 +1837,7 @@ function createJRemixer(context, buf) {
             }
 
             function filterSegments(track) {
-                var threshold = .3;
+                var threshold = 0.1;
                 var fsegs = [];
                 fsegs.push(track.analysis.segments[0]);
                 for (var i = 1; i < track.analysis.segments.length; i++) {
@@ -1853,7 +1853,7 @@ function createJRemixer(context, buf) {
             }
 
             function isSimilar(seg1, seg2) {
-                var threshold = 1;
+                var threshold = 50;
                 var distance = timbral_distance(seg1, seg2);
                 return (distance < threshold);
             }
@@ -1926,6 +1926,7 @@ function createJRemixer(context, buf) {
                     }
                 }
             }
+            console.log(track);
             preprocessTrack(track);
             fetchAudio();
             // if (track.status == 'complete') {
@@ -1984,6 +1985,7 @@ function createJRemixer(context, buf) {
                     audioSource.buffer = q.track.buffer;
                     audioSource.connect(audioGain);
                     var duration = track.audio_summary.duration - q.start;
+                    console.log(q.start);
                     audioSource.noteGrainOn(start, q.start, duration);
                     if (curAudioSource) {
                         curAudioSource.noteOff(start);
@@ -2090,7 +2092,7 @@ function createJRemixer(context, buf) {
 function euclidean_distance(v1, v2) {
     var sum = 0;
     for (var i = 0; i < 3; i++) {
-        var delta = v2 - v1;
+        var delta = v2[i] - v1[i];
         sum += delta * delta;
     }
     return Math.sqrt(sum);
